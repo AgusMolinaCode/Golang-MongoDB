@@ -1,19 +1,20 @@
 package main
 
 import (
-    "context"
-    "log"
-    "os"
-    "time"
+	"context"
+	"log"
+	"os"
+	"time"
 
-    "github.com/gofiber/fiber/v2"
-    "github.com/joho/godotenv"
-    "github.com/gofiber/fiber/v2/middleware/logger"
-    "go.mongodb.org/mongo-driver/bson"
-    "go.mongodb.org/mongo-driver/mongo"
-    "go.mongodb.org/mongo-driver/mongo/options"
-    "go.mongodb.org/mongo-driver/mongo/readpref"
-    "go.mongodb.org/mongo-driver/bson/primitive"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 type Todo struct {
@@ -53,6 +54,12 @@ func main() {
     initMongo()
 
     app := fiber.New()
+
+    app.Use(cors.New(cors.Config{
+        AllowOrigins: "http://localhost:3000",
+        AllowHeaders: "Origin, Content-Type, Accept",
+    }))
+
     app.Use(logger.New())
 
     app.Get("/todos", getTodos)
@@ -61,7 +68,7 @@ func main() {
     app.Put("/todos/:id", updateTodo)
     app.Delete("/todos/:id", deleteTodo)
 
-    log.Fatal(app.Listen(":3000"))
+    log.Fatal(app.Listen(":8080"))
 }
 
 func getTodos(c *fiber.Ctx) error {
