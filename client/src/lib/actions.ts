@@ -1,25 +1,49 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
 export async function GetTodos() {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/todos`);
     const data = await response.json();
-    console.log("Todos:", data);
     return data;
   } catch (error) {
     console.error("Error fetching todos:", error);
   }
 }
 
-export async function DeleteTodoById(id: string) {
+export async function DeleteTodoById(formData: FormData) {
+  const id = formData.get("id") as string;
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/todos/${id}`, {
       method: "DELETE",
     });
+    if (!response.ok) {
+      throw new Error("Failed to delete todo");
+    }
     const data = await response.json();
-    console.log("Deleted Todo:", data);
     return data;
   } catch (error) {
     console.error("Error deleting todo:", error);
   }
+  revalidatePath("/"); 
+}
+
+export async function createTodo(values: { title: string; completed: boolean }) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/todos`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to create todo");
+    }
+  } catch (error) {
+    console.error("Error creating todo:", error);
+  }
+  redirect("/");
 }
