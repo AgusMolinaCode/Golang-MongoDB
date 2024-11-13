@@ -5,7 +5,6 @@ import { Todo } from "@/types/todo";
 const EditTodoPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;
 
-  //   const todo = await getTodoById(params.id);
   const todos = await getTodoById(params.id);
   console.log(todos);
 
