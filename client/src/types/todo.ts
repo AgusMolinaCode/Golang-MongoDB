@@ -7,6 +7,6 @@ export interface Todo {
   updated_at: string;
 }
 
-export interface DeleteButtonProps {
+export interface ButtonProps {
   id: string;
 }

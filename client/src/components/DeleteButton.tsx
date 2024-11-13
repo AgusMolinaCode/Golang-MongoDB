@@ -1,10 +1,8 @@
-"use client";
-
 import React from "react";
-import { DeleteButtonProps } from "@/types/todo";
+import { ButtonProps } from "@/types/todo";
 import { DeleteTodoById } from "@/lib/actions";
 
-const DeleteButton: React.FC<DeleteButtonProps> = ({ id }) => {
+const DeleteButton: React.FC<ButtonProps> = ({ id }) => {
 
   return (
     <form action={DeleteTodoById}>

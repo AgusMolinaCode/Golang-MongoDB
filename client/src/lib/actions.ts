@@ -13,6 +13,16 @@ export async function GetTodos() {
   }
 }
 
+export async function getTodoById(id: string) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/todos/${id}`);
+    const data = await response.json();
+    return data
+  } catch (error) {
+    console.error("Error fetching todo:", error);
+  }
+}
+
 export async function DeleteTodoById(formData: FormData) {
   const id = formData.get("id") as string;
   try {
@@ -46,4 +56,22 @@ export async function createTodo(values: { title: string; completed: boolean }) 
     console.error("Error creating todo:", error);
   }
   redirect("/");
+}
+
+export async function updateTodo(id: string, values: { title: string; completed: boolean }) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/todos/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to update todo");
+    }
+    revalidatePath("/");
+  } catch (error) {
+    console.error("Error updating todo:", error);
+  }
 }

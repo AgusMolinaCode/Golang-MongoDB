@@ -3,10 +3,11 @@ import { GetTodos } from "@/lib/actions";
 import { Todo } from "@/types/todo";
 import { format, isValid, parseISO } from "date-fns";
 import DeleteButton from "./DeleteButton";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 const GetTodosList = async () => {
   const todos: Todo[] = await GetTodos();
-
   return (
     <div>
       <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 justify-items-center">
@@ -44,8 +45,12 @@ const GetTodosList = async () => {
                     : "Invalid Date"}
                 </span>{" "}
               </li>
-              {/* Delete Button by id */}
-              <DeleteButton id={todo.id} />
+              <div className="flex justify-center gap-2 mx-auto pt-4">
+                <Button>
+                  <Link href={`/edit-todo/${todo.id}`}>Edit</Link>
+                </Button>
+                <DeleteButton id={todo.id} />
+              </div>
             </ul>
           );
         })}

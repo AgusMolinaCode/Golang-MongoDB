@@ -17,12 +17,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox";
 import { formSchema } from "@/lib/zodSchema";
 import { createTodo } from "@/lib/actions";
-import { redirect } from "next/navigation";
-
-
 
 const page = () => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -35,10 +32,10 @@ const page = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-        await createTodo(values);
-        form.reset();
+      await createTodo(values);
+      form.reset();
     } catch (error) {
-        console.error("Error creating todo:", error);
+      console.error("Error creating todo:", error);
     }
   }
   return (
