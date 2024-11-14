@@ -1,12 +1,10 @@
 import React from "react";
 import { getTodoById } from "@/lib/actions";
-import { Todo } from "@/types/todo";
 
 const EditTodoPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;
 
   const todos = await getTodoById(params.id);
-  console.log(todos);
 
   return (
     <div>
