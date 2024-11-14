@@ -1,17 +1,18 @@
 import React from "react";
 import { getTodoById } from "@/lib/actions";
+import EditForm from "@/components/EditForm";
+import { Todo } from "@/types/todo";
 
-const EditTodoPage = async (props: { params: Promise<{ id: string }> }) => {
-  const params = await props.params;
-
-  const todos = await getTodoById(params.id);
+const EditTodoPage = async ({ params }: { params: { id: string } }) => {
+  const todo: Todo = await getTodoById(params.id);
 
   return (
     <div>
-      <h1>Edit Todo</h1>
-      <p>{todos.title}</p>
-      <p>{todos.completed}</p>
-      <p>{todos.id}</p>
+      <EditForm 
+        id={todo.id}
+        title={todo.title}
+        completed={todo.completed}
+      />
     </div>
   );
 };

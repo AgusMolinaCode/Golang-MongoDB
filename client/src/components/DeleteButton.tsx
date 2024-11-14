@@ -7,7 +7,7 @@ const DeleteButton: React.FC<ButtonProps> = ({ id }) => {
   return (
     <form action={DeleteTodoById}>
       <input type="hidden" name="id" value={id} />
-      <button className="bg-red-500 text-white p-2 rounded">Delete</button>
+      <button className="bg-red-500 hover:bg-red-700 duration-200 text-white p-2 rounded font-bold">Delete</button>
     </form>
   );
 };

@@ -74,4 +74,5 @@ export async function updateTodo(id: string, values: { title: string; completed:
   } catch (error) {
     console.error("Error updating todo:", error);
   }
+  redirect("/");
 }
