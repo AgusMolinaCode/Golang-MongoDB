@@ -55,7 +55,7 @@ const GetTodosList = async () => {
               </div>
               <div className="flex justify-center gap-2 mx-auto pt-4">
                 <Link
-                  className="bg-blue-500 hover:bg-blue-700 duration-200 text-white font-bold py-2 px-4 rounded"
+                  className="bg-blue-500 hover:bg-blue-700 duration-300 text-white font-bold py-2 px-4 rounded"
                   href={`/edit-todo/${todo.id}`}
                 >
                   Edit
