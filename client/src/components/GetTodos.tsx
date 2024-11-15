@@ -44,7 +44,7 @@ const GetTodosList = async () => {
                 </li>
                 {isEdited && (
                   <li className="font-semibold text-black">
-                    Actualizado:
+                    Editado:
                     <span className="text-gray-600">
                       {updatedAt && isValid(updatedAt)
                         ? format(updatedAt, "MM-dd HH:mm")
