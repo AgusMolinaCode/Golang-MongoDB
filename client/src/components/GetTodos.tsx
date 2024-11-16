@@ -1,74 +1,63 @@
-import React from "react";
-import { GetTodos } from "@/lib/actions";
-import { Todo } from "@/types/todo";
-import { format, isValid, parseISO } from "date-fns";
-import DeleteButton from "./DeleteButton";
-import Link from "next/link";
+import React from "react"
+import { GetTodos } from "@/lib/actions"
+import { Todo } from "@/types/todo"
+import { format, isValid, parseISO } from "date-fns"
+import DeleteButton from "./DeleteButton"
+import Link from "next/link"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { CalendarIcon, CheckCircle2, XCircle, Edit2Icon } from 'lucide-react'
+import { Button } from "@/components/ui/button"
 
 const GetTodosList = async () => {
-  const todos: Todo[] = await GetTodos();
+  const todos: Todo[] = await GetTodos()
+
   return (
-    <div>
-      <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 justify-items-center">
-        {todos.map((todo) => {
-          const createdAt = todo.created_at ? parseISO(todo.created_at) : null;
-          const updatedAt = todo.updated_at ? parseISO(todo.updated_at) : null;
+    <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      {todos.map((todo) => {
+        const createdAt = todo.created_at ? parseISO(todo.created_at) : null
+        const updatedAt = todo.updated_at ? parseISO(todo.updated_at) : null
+        const isEdited = createdAt && updatedAt && createdAt.getTime() !== updatedAt.getTime()
 
-          const isEdited =
-            createdAt &&
-            updatedAt &&
-            createdAt.getTime() !== updatedAt.getTime();
-
-          return (
-            <ul key={todo.id} className="border border-gray-200 p-4 my-2 h-50 flex flex-col justify-between">
-              <div>
-                <li className="font-semibold text-black">
-                  ID: <span className="text-gray-600">{todo.id}</span>{" "}
-                </li>
-                <li className="font-semibold text-black">
-                  Title: <span className="text-gray-600">{todo.title}</span>{" "}
-                </li>
-                <li className="font-semibold text-black">
-                  Completed:{" "}
-                  <span className="text-gray-600">
-                    {todo.completed ? "✅" : "❌"}
-                  </span>{" "}
-                </li>
-                <li className="font-semibold text-black">
-                  Creado:
-                  <span className="text-gray-600">
-                    {createdAt && isValid(createdAt)
-                      ? format(createdAt, "MM-dd HH:mm")
-                      : "Invalid Date"}
-                  </span>{" "}
-                </li>
-                {isEdited && (
-                  <li className="font-semibold text-black">
-                    Actualizado:
-                    <span className="text-gray-600">
-                      {updatedAt && isValid(updatedAt)
-                        ? format(updatedAt, "MM-dd HH:mm")
-                        : "Invalid Date"}
-                    </span>{" "}
-                  </li>
+        return (
+          <Card key={todo.id} className="flex flex-col justify-between">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold truncate">{todo.title}</CardTitle>
+              <Badge variant={todo.completed ? "default" : "destructive"} className="w-fit">
+                {todo.completed ? (
+                  <CheckCircle2 className="w-4 h-4 mr-1" />
+                ) : (
+                  <XCircle className="w-4 h-4 mr-1" />
                 )}
-              </div>
-              <div className="flex justify-center gap-2 mx-auto pt-4">
-                <Link
-                  className="bg-blue-500 hover:bg-blue-700 duration-300 text-white font-bold py-2 px-4 rounded"
-                  href={`/edit-todo/${todo.id}`}
-                >
+                {todo.completed ? "Completed" : "Pending"}
+              </Badge>
+            </CardHeader>
+            <CardContent className="text-sm space-y-2">
+              <p className="flex items-center text-muted-foreground">
+                <CalendarIcon className="w-4 h-4 mr-2" />
+                Created: {createdAt && isValid(createdAt) ? format(createdAt, "MMM dd, HH:mm") : "Invalid Date"}
+              </p>
+              {isEdited && (
+                <p className="flex items-center text-muted-foreground">
+                  <CalendarIcon className="w-4 h-4 mr-2" />
+                  Updated: {updatedAt && isValid(updatedAt) ? format(updatedAt, "MMM dd, HH:mm") : "Invalid Date"}
+                </p>
+              )}
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <Button variant="outline" size="sm" asChild>
+                <Link href={`/edit-todo/${todo.id}`}>
+                  <Edit2Icon className="w-4 h-4 mr-2" />
                   Edit
                 </Link>
-
-                <DeleteButton id={todo.id} />
-              </div>
-            </ul>
-          );
-        })}
-      </ul>
+              </Button>
+              <DeleteButton id={todo.id} />
+            </CardFooter>
+          </Card>
+        )
+      })}
     </div>
-  );
-};
+  )
+}
 
-export default GetTodosList;
+export default GetTodosList
