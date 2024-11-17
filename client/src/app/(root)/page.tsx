@@ -1,4 +1,5 @@
 import GetTodosList from "@/components/GetTodos";
+import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -6,6 +7,9 @@ export default async function Home() {
   return (
     <div>
       <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-end pb-6">
+          <ModeToggle />
+        </div>
         <h1 className="text-4xl font-bold text-center mb-4">
           TodoList con Golang y Next.js 15
         </h1>
