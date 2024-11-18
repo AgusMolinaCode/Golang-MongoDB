@@ -11,6 +11,6 @@ export const formSchema = z.object({
   });
   
   export const registerSchema = z.object({
-    username: z.string().min(1, "Username is required"),
-    password: z.string().min(1, "Password is required"),
+    username: z.string().min(5, "min 5 characters").max(50, "max 50 characters"),
+    password: z.string().min(5, "min 5 characters").max(50, "max 50 characters"),
   });

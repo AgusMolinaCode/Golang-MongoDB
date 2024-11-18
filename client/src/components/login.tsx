@@ -34,21 +34,19 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
         const token = await Login(values);
         if (token && token.token) {
           onLogin(token.token);
-          setErrorMessage(null); // Clear any previous error messages
         } else {
           setErrorMessage("Invalid username or password");
-          setTimeout(() => setErrorMessage(null), 2000); // Clear error message after 5 seconds
+          setTimeout(() => setErrorMessage(null), 2000);
         }
       } else {
         const response = await Register(values);
         if (response && response.success) {
-          setIsLogin(true); // Switch to login form after successful registration
-          setErrorMessage(null); // Clear any previous error messages
+          setIsLogin(true);
           setSuccessMessage("User registered successfully");
-          setTimeout(() => setSuccessMessage(null), 2000); // Clear success message after 5 seconds
+          setTimeout(() => setSuccessMessage(null), 2000); 
         } else {
           setErrorMessage("Registration failed");
-          setTimeout(() => setErrorMessage(null), 2000); // Clear error message after 5 seconds
+          setTimeout(() => setErrorMessage(null), 2000);
         }
       }
    
