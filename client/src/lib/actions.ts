@@ -13,15 +13,38 @@ export async function Login(values: { username: string; password: string }) {
       body: JSON.stringify(values),
     });
     if (!response.ok) {
-      throw new Error("Failed to login");
+      const errorText = await response.text();
+      throw new Error(errorText || "Failed to login");
     }
     const data = await response.json();
     console.log("Login successful", data);
     return data;
   } catch (error) {
     console.error("Error logging in:", error);
+    throw error;
   }
-  redirect("/");
+}
+
+export async function Register(values: { username: string; password: string }) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || "Failed to register");
+    }
+    const data = await response.json();
+    console.log("Registration successful", data);
+    return { success: true, ...data };
+  } catch (error) {
+    console.error("Error registering:", error);
+    throw error;
+  }
 }
 
 async function fetchWithAuth(url: string, token: string, options: RequestInit = {}) {
