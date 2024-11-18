@@ -1,23 +1,36 @@
-import React from "react"
-import { GetTodos } from "@/lib/actions"
-import { Todo } from "@/types/todo"
-import { format, isValid, parseISO } from "date-fns"
-import DeleteButton from "./DeleteButton"
-import Link from "next/link"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { CalendarIcon, CheckCircle2, XCircle, Edit2Icon } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import React, { useEffect, useState } from "react";
+import { GetTodos } from "@/lib/actions";
+import { Todo } from "@/types/todo";
+import { format, isValid, parseISO } from "date-fns";
+import DeleteButton from "./DeleteButton";
+import Link from "next/link";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { CalendarIcon, CheckCircle2, XCircle, Edit2Icon } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
-const GetTodosList = async () => {
-  const todos: Todo[] = await GetTodos()
+interface GetTodosListProps {
+  token: string;
+}
+
+const GetTodosList: React.FC<GetTodosListProps> = ({ token }) => {
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  useEffect(() => {
+    const fetchTodos = async () => {
+      const fetchedTodos = await GetTodos(token);
+      setTodos(fetchedTodos);
+    };
+
+    fetchTodos();
+  }, [token]);
 
   return (
     <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
       {todos.map((todo) => {
-        const createdAt = todo.created_at ? parseISO(todo.created_at) : null
-        const updatedAt = todo.updated_at ? parseISO(todo.updated_at) : null
-        const isEdited = createdAt && updatedAt && createdAt.getTime() !== updatedAt.getTime()
+        const createdAt = todo.created_at ? parseISO(todo.created_at) : null;
+        const updatedAt = todo.updated_at ? parseISO(todo.updated_at) : null;
+        const isEdited = createdAt && updatedAt && createdAt.getTime() !== updatedAt.getTime();
 
         return (
           <Card key={todo.id} className="flex flex-col justify-between">
@@ -51,13 +64,13 @@ const GetTodosList = async () => {
                   Edit
                 </Link>
               </Button>
-              <DeleteButton id={todo.id} />
+              {/* <DeleteButton id={todo.id} token={token} /> */}
             </CardFooter>
           </Card>
-        )
+        );
       })}
     </div>
-  )
-}
+  );
+};
 
-export default GetTodosList
+export default GetTodosList;

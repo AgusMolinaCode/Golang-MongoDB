@@ -1,9 +1,19 @@
+'use client';
+
+import { useState } from "react";
 import GetTodosList from "@/components/GetTodos";
+import LoginForm from "@/components/login";
 import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default async function Home() {
+export default function Home() {
+  const [token, setToken] = useState<string | null>(null);
+
+  const handleLogin = (token: string) => {
+    setToken(token);
+  };
+
   return (
     <div>
       <div className="container mx-auto px-4 py-8">
@@ -22,7 +32,11 @@ export default async function Home() {
           </Button>
         </div>
         <div className="bg-card text-card-foreground rounded-lg shadow-lg p-6">
-          <GetTodosList />
+          {!token ? (
+            <LoginForm onLogin={handleLogin} />
+          ) : (
+            <GetTodosList token={token} />
+          )}
         </div>
       </div>
     </div>
