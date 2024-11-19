@@ -1,26 +1,37 @@
-'use client';
+"use client";
 
-import { useState } from "react";
-import LoginForm from "@/components/login";
-import { ModeToggle } from "@/components/ModeToggle";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import GetTodosList from "@/components/GetTodos";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { ModeToggle } from "@/components/ModeToggle";
 
-export default function Home() {
+export default function TodosPage() {
   const [token, setToken] = useState<string | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleLogin = (token: string) => {
-    setToken(token);
-  };
+  useEffect(() => {
+    const tokenFromQuery = searchParams.get("token");
+    if (tokenFromQuery) {
+      setToken(tokenFromQuery);
+    } else {
+      router.push("/"); // Redirect to login if no token is found
+    }
+  }, [searchParams, router]);
 
   const handleLogout = () => {
     setToken(null);
+    router.push("/"); // Redirect to login page
   };
 
   return (
     <div>
       <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-end pb-6">
+        <div className="flex justify-between pb-6">
+          <ModeToggle />
+
           {token && (
             <Button variant="outline" onClick={handleLogout} className="ml-4">
               Logout
@@ -33,14 +44,16 @@ export default function Home() {
         <p className="text-xl text-center text-muted-foreground mb-8">
           Utilizando Server Actions para una experiencia fluida
         </p>
-        {/* <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-8">
           <Button>
             <Link href="/add-todo">Add Todo </Link>
           </Button>
-        </div> */}
+        </div>
         <div className="bg-card text-card-foreground rounded-lg shadow-lg p-6">
-          {!token && (
-            <LoginForm onLogin={handleLogin} />
+          {token ? (
+            <GetTodosList token={token} />
+          ) : (
+            <p className="text-center text-2xl">Loading...</p>
           )}
         </div>
       </div>

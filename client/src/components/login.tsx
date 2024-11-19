@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { loginSchema, registerSchema } from "@/lib/zodSchema";
+import { useRouter } from "next/navigation";
 
 interface LoginFormProps {
   onLogin: (token: string) => void;
@@ -19,6 +20,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof loginSchema | typeof registerSchema>>({
     resolver: zodResolver(isLogin ? loginSchema : registerSchema),
@@ -34,29 +36,33 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
         const token = await Login(values);
         if (token && token.token) {
           onLogin(token.token);
+          setErrorMessage(null); // Clear any previous error messages
+          router.push(`/todos?token=${token.token}`); // Redirect to /todos with token as query parameter
         } else {
           setErrorMessage("Invalid username or password");
-          setTimeout(() => setErrorMessage(null), 2000);
+          setTimeout(() => setErrorMessage(null), 5000); // Clear error message after 5 seconds
         }
       } else {
         const response = await Register(values);
         if (response && response.success) {
-          setIsLogin(true);
+          setIsLogin(true); // Switch to login form after successful registration
+          setErrorMessage(null); // Clear any previous error messages
           setSuccessMessage("User registered successfully");
-          setTimeout(() => setSuccessMessage(null), 2000); 
+          setTimeout(() => setSuccessMessage(null), 5000); // Clear success message after 5 seconds
         } else {
           setErrorMessage("Registration failed");
-          setTimeout(() => setErrorMessage(null), 2000);
+          setTimeout(() => setErrorMessage(null), 5000); // Clear error message after 5 seconds
         }
       }
-   
+      form.reset();
     } catch (error) {
+      console.error("Error:", error);
       if (error instanceof Error) {
         setErrorMessage(error.message || "An error occurred");
       } else {
         setErrorMessage("An error occurred");
       }
-      setTimeout(() => setErrorMessage(null), 2000); // Clear error message after 5 seconds
+      setTimeout(() => setErrorMessage(null), 5000); // Clear error message after 5 seconds
     }
   }
 
