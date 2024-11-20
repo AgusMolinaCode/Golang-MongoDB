@@ -5,11 +5,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import GetTodosList from "@/components/GetTodos";
 import AddTodoModal from "@/components/AddTodoModal";
 import { Button } from "@/components/ui/button";
-
 import { ModeToggle } from "@/components/ModeToggle";
+import { Todo } from "@/types/todo";
+import { GetTodos } from "@/lib/actions";
 
 export default function TodosPage() {
   const [token, setToken] = useState<string | null>(null);
+  const [todos, setTodos] = useState<Todo[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -22,9 +24,24 @@ export default function TodosPage() {
     }
   }, [searchParams, router]);
 
+  useEffect(() => {
+    const fetchTodos = async () => {
+      if (token) {
+        const fetchedTodos = await GetTodos(token);
+        setTodos(fetchedTodos || []);
+      }
+    };
+
+    fetchTodos();
+  }, [token]);
+
   const handleLogout = () => {
     setToken(null);
     router.push("/"); // Redirect to login page
+  };
+
+  const handleTodoCreated = (fetchedTodos: Todo[]) => {
+    setTodos(fetchedTodos);
   };
 
   return (
@@ -46,11 +63,11 @@ export default function TodosPage() {
           Utilizando Server Actions para una experiencia fluida
         </p>
         <div className="flex justify-center mb-8">
-          {token && <AddTodoModal token={token} />}
+          {token && <AddTodoModal token={token} onTodoCreated={handleTodoCreated} />}
         </div>
         <div className="bg-card text-card-foreground rounded-lg shadow-lg p-6">
           {token ? (
-            <GetTodosList token={token} />
+            <GetTodosList token={token} todos={todos} setTodos={setTodos} />
           ) : (
             <p className="text-center">Loading...</p>
           )}

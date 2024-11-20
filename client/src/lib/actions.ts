@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 export async function Login(values: { username: string; password: string }) {
   try {
@@ -71,19 +70,6 @@ export async function GetTodos(token: string) {
   
 }
 
-export async function DeleteTodoById(token: string, formData: FormData) {
-  const id = formData.get("id") as string;
-  try {
-    const data = await fetchWithAuth(`${process.env.NEXT_PUBLIC_URL}/todos/${id}`, token, {
-      method: "DELETE",
-    });
-    revalidatePath("/");
-    return data;
-  } catch (error) {
-    console.error("Error deleting todo:", error);
-  }
-}
-
 export async function createTodo(token: string, values: { title: string; completed: boolean }) {
   try {
     const data = await fetchWithAuth(`${process.env.NEXT_PUBLIC_URL}/todos`, token, {
@@ -98,6 +84,21 @@ export async function createTodo(token: string, values: { title: string; complet
     console.error("Error creating todo:", error);
   }
 }
+
+export async function DeleteTodoById(token: string, formData: FormData) {
+  const id = formData.get("id") as string;
+  try {
+    const data = await fetchWithAuth(`${process.env.NEXT_PUBLIC_URL}/todos/${id}`, token, {
+      method: "DELETE",
+    });
+    revalidatePath("/");
+    return data;
+  } catch (error) {
+    console.error("Error deleting todo:", error);
+  }
+}
+
+
 
 export async function updateTodo(token: string, id: string, values: { title: string; completed: boolean }) {
   try {

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { createTodo } from "@/lib/actions";
+import { createTodo, GetTodos } from "@/lib/actions";
 import { formSchema } from "@/lib/zodSchema";
 import {
   Dialog,
@@ -28,16 +28,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { PlusCircle } from "lucide-react";
-import { redirect, useRouter } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { Todo } from "@/types/todo";
 
 interface AddTodoModalProps {
   token: string;
+  onTodoCreated: (todos: Todo[]) => void;
 }
 
-const AddTodoModal: React.FC<AddTodoModalProps> = ({ token }) => {
+const AddTodoModal: React.FC<AddTodoModalProps> = ({ token, onTodoCreated }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,14 +48,14 @@ const AddTodoModal: React.FC<AddTodoModalProps> = ({ token }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       await createTodo(token, values);
+      const fetchedTodos = await GetTodos(token);
       form.reset();
       setIsOpen(false); // Close the modal
+      onTodoCreated(fetchedTodos); // Pass the fetched todos to the parent component
     } catch (error) {
-        console.log("Error creating todo");
+      console.log("Error creating todo");
     }
-    router.prefetch(`/todos?token=${token}`);
-    // redirect(`/todos?token=${token}`);
-}
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
