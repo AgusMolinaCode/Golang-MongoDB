@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import { Todo } from "@/types/todo";
 import { format, isValid, parseISO } from "date-fns";
 import DeleteButton from "./DeleteButton";
-import Link from "next/link";
+import EditTodoModal from "./EditTodoModal";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CalendarIcon, CheckCircle2, XCircle, Edit2Icon } from 'lucide-react';
+import { CalendarIcon, CheckCircle2, XCircle } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { GetTodos } from "@/lib/actions";
+import { redirect } from "next/navigation";
 
 interface GetTodosListProps {
   token: string;
@@ -32,10 +33,10 @@ const GetTodosList: React.FC<GetTodosListProps> = ({ token, todos, setTodos }) =
 
   return (
     <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-      {todos.length === 0 ? (
+      {todos && todos.length === 0 ? (
         <p className="text-center col-span-full">No todos found</p>
       ) : (
-        todos.map((todo) => {
+        todos && todos.map((todo) => {
           const createdAt = todo.created_at ? parseISO(todo.created_at) : null;
           const updatedAt = todo.updated_at ? parseISO(todo.updated_at) : null;
           const isEdited = createdAt && updatedAt && createdAt.getTime() !== updatedAt.getTime();
@@ -66,13 +67,8 @@ const GetTodosList: React.FC<GetTodosListProps> = ({ token, todos, setTodos }) =
                 )}
               </CardContent>
               <CardFooter className="flex justify-between">
-                <Button variant="outline" size="sm" asChild>
-                  <Link href={`/edit-todo/${todo.id}`}>
-                    <Edit2Icon className="w-4 h-4 mr-2" />
-                    Edit
-                  </Link>
-                </Button>
-                {/* <DeleteButton id={todo.id} token={token} /> */}
+                <EditTodoModal token={token} todo={todo} onTodoUpdated={setTodos} />
+                <DeleteButton id={todo.id} token={token} onTodoDeleted={setTodos} />
               </CardFooter>
             </Card>
           );

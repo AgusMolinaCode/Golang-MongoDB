@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import LoginForm from "@/components/login";
-import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export default function Home() {
   const [token, setToken] = useState<string | null>(null);
@@ -33,11 +31,6 @@ export default function Home() {
         <p className="text-xl text-center text-muted-foreground mb-8">
           Utilizando Server Actions para una experiencia fluida
         </p>
-        {/* <div className="flex justify-center mb-8">
-          <Button>
-            <Link href="/add-todo">Add Todo </Link>
-          </Button>
-        </div> */}
         <div className="bg-card text-card-foreground rounded-lg shadow-lg p-6">
           {!token && (
             <LoginForm onLogin={handleLogin} />

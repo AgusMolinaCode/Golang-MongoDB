@@ -20,15 +20,20 @@ export default function TodosPage() {
     if (tokenFromQuery) {
       setToken(tokenFromQuery);
     } else {
-      router.push("/"); // Redirect to login if no token is found
+      router.push("/");
     }
   }, [searchParams, router]);
 
   useEffect(() => {
     const fetchTodos = async () => {
       if (token) {
-        const fetchedTodos = await GetTodos(token);
-        setTodos(fetchedTodos || []);
+        try {
+          const fetchedTodos = await GetTodos(token);
+          setTodos(fetchedTodos || []);
+        } catch (error) {
+          console.error("Error fetching todos:", error);
+          setTodos([]);
+        }
       }
     };
 

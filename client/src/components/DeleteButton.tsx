@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import React, { useState } from "react"
-import { ButtonProps } from "@/types/todo"
-import { DeleteTodoById } from "@/lib/actions"
-import { Button } from "@/components/ui/button"
+import React, { useState } from "react";
+import { ButtonProps, Todo } from "@/types/todo";
+import { DeleteTodoById, GetTodos } from "@/lib/actions";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,18 +12,25 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Trash2 } from 'lucide-react'
+} from "@/components/ui/dialog";
+import { Trash2 } from 'lucide-react';
 
-const DeleteButton: React.FC<ButtonProps> = ({ id }) => {
-  const [isOpen, setIsOpen] = useState(false)
+interface DeleteButtonProps extends ButtonProps {
+  token: string;
+  onTodoDeleted: (todos: Todo[]) => void;
+}
+
+const DeleteButton: React.FC<DeleteButtonProps> = ({ id, token, onTodoDeleted }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleDelete = async () => {
     const formData = new FormData();
     formData.append("id", id);
-    await DeleteTodoById(formData);
-    setIsOpen(false)
-  }
+    await DeleteTodoById(token, formData);
+    const fetchedTodos = await GetTodos(token);
+    setIsOpen(false);
+    onTodoDeleted(fetchedTodos); // Pass the fetched todos to the parent component
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -50,7 +57,7 @@ const DeleteButton: React.FC<ButtonProps> = ({ id }) => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default DeleteButton
+export default DeleteButton;
