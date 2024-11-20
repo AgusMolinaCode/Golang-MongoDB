@@ -42,7 +42,7 @@ const EditForm: React.FC<EditFormProps> = ({ id, title, completed }) => {
       await updateTodo(id, values);
       form.reset(values);
     } catch (error) {
-      console.error("Error updating todo:", error);
+      console.log("Error updating todo");
     }
   }
 

@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,6 +25,19 @@ import { createTodo } from "@/lib/actions";
 import { PlusCircle, ArrowLeft } from 'lucide-react';
 
 const Page = () => {
+  const [token, setToken] = useState<string | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const tokenFromQuery = searchParams.get("token");
+    if (tokenFromQuery) {
+      setToken(tokenFromQuery);
+    } else {
+      router.push("/"); // Redirect to login if no token is found
+    }
+  }, [searchParams, router]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,17 +48,21 @@ const Page = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await createTodo(values);
-      form.reset();
+      if (token) {
+        await createTodo(token, values);
+        form.reset();
+      } else {
+        router.push("/"); // Redirect to login if no token is found
+      }
     } catch (error) {
-      console.error("Error creating todo:", error);
+      console.log("Error creating todo");
     }
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <Button asChild variant="outline" className="mb-6">
-        <Link href="/">
+        <Link href={`/todos?token=${token}`}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Main Page
         </Link>

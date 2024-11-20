@@ -68,6 +68,7 @@ export async function GetTodos(token: string) {
   } catch (error) {
     console.error("Error fetching todos:", error);
   }
+  
 }
 
 export async function DeleteTodoById(token: string, formData: FormData) {
@@ -92,7 +93,6 @@ export async function createTodo(token: string, values: { title: string; complet
       },
       body: JSON.stringify(values),
     });
-    revalidatePath("/");
     return data;
   } catch (error) {
     console.error("Error creating todo:", error);

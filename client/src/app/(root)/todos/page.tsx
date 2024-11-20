@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import GetTodosList from "@/components/GetTodos";
+import AddTodoModal from "@/components/AddTodoModal";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+
 import { ModeToggle } from "@/components/ModeToggle";
 
 export default function TodosPage() {
@@ -45,15 +46,13 @@ export default function TodosPage() {
           Utilizando Server Actions para una experiencia fluida
         </p>
         <div className="flex justify-center mb-8">
-          <Button>
-            <Link href="/add-todo">Add Todo </Link>
-          </Button>
+          {token && <AddTodoModal token={token} />}
         </div>
         <div className="bg-card text-card-foreground rounded-lg shadow-lg p-6">
           {token ? (
             <GetTodosList token={token} />
           ) : (
-            <p className="text-center text-2xl">Loading...</p>
+            <p className="text-center">Loading...</p>
           )}
         </div>
       </div>
