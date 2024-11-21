@@ -52,7 +52,7 @@ const AddTodoModal: React.FC<AddTodoModalProps> = ({ token, onTodoCreated }) => 
       form.reset();
       setIsOpen(false); // Close the modal
       onTodoCreated(fetchedTodos); // Pass the fetched todos to the parent component
-    } catch (error) {
+    } catch {
       console.log("Error creating todo");
     }
   }

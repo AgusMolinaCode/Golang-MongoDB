@@ -6,9 +6,8 @@ import EditTodoModal from "./EditTodoModal";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CalendarIcon, CheckCircle2, XCircle } from 'lucide-react';
-import { Button } from "@/components/ui/button";
 import { GetTodos } from "@/lib/actions";
-import { redirect } from "next/navigation";
+
 
 interface GetTodosListProps {
   token: string;

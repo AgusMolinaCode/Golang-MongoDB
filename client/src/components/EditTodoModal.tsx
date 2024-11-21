@@ -53,7 +53,7 @@ const EditTodoModal: React.FC<EditTodoModalProps> = ({ token, todo, onTodoUpdate
       form.reset();
       setIsOpen(false); // Close the modal
       onTodoUpdated(fetchedTodos); // Pass the fetched todos to the parent component
-    } catch (error) {
+    } catch {
       console.log("Error updating todo");
     }
   }

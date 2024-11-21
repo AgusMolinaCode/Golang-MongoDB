@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import GetTodosList from "@/components/GetTodos";
 import AddTodoModal from "@/components/AddTodoModal";
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle";
 import { Todo } from "@/types/todo";
 import { GetTodos } from "@/lib/actions";
+import Loading from "@/app/loading";
 
 export default function TodosPage() {
   const [token, setToken] = useState<string | null>(null);
@@ -68,11 +69,15 @@ export default function TodosPage() {
           Utilizando Server Actions para una experiencia fluida
         </p>
         <div className="flex justify-center mb-8">
-          {token && <AddTodoModal token={token} onTodoCreated={handleTodoCreated} />}
+          {token && (
+            <AddTodoModal token={token} onTodoCreated={handleTodoCreated} />
+          )}
         </div>
         <div className="bg-card text-card-foreground rounded-lg shadow-lg p-6">
           {token ? (
-            <GetTodosList token={token} todos={todos} setTodos={setTodos} />
+            <Suspense fallback={<Loading />}>
+              <GetTodosList token={token} todos={todos} setTodos={setTodos} />
+            </Suspense>
           ) : (
             <p className="text-center">Loading...</p>
           )}
