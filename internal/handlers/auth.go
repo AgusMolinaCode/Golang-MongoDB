@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"agustin/internal/config"
-	"agustin/internal/models"
 	"context"
 	"time"
 
+	"github.com/AgusMolinaCode/Golang-MongoDB/internal/config"
+	"github.com/AgusMolinaCode/Golang-MongoDB/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"go.mongodb.org/mongo-driver/bson"

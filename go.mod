@@ -1,6 +1,6 @@
-module agustin
+module github.com/AgusMolinaCode/Golang-MongoDB
 
-go 1.23.2
+go 1.20
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect

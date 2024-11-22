@@ -1,15 +1,15 @@
 package handlers
 
 import (
-    "context"
-    "time"
+	"context"
+	"time"
 
-    "github.com/gofiber/fiber/v2"
-    "github.com/golang-jwt/jwt/v4"
-    "go.mongodb.org/mongo-driver/bson"
-    "go.mongodb.org/mongo-driver/bson/primitive"
-    "agustin/internal/config"
-    "agustin/internal/models"
+	"github.com/AgusMolinaCode/Golang-MongoDB/internal/config"
+	"github.com/AgusMolinaCode/Golang-MongoDB/internal/models"
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func GetTodos(c *fiber.Ctx) error {

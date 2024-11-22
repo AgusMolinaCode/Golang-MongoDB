@@ -1,15 +1,14 @@
 package main
 
 import (
-    "log"
-    "agustin/internal/config"
-    "agustin/internal/handlers"
-    
+	"log"
 
-    "github.com/gofiber/fiber/v2"
-    "github.com/gofiber/fiber/v2/middleware/cors"
-    "github.com/gofiber/fiber/v2/middleware/logger"
-    jwtware "github.com/gofiber/jwt/v3"
+	"github.com/AgusMolinaCode/Golang-MongoDB/internal/config"
+	"github.com/AgusMolinaCode/Golang-MongoDB/internal/handlers"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	jwtware "github.com/gofiber/jwt/v3"
 )
 
 func main() {
