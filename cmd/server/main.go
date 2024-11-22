@@ -6,7 +6,9 @@ import (
 	"github.com/AgusMolinaCode/Golang-MongoDB/internal/config"
 	"github.com/AgusMolinaCode/Golang-MongoDB/internal/handlers"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
+	"os"
+
+	// "github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	jwtware "github.com/gofiber/jwt/v3"
 )
@@ -16,10 +18,10 @@ func main() {
 
     app := fiber.New()
 
-    app.Use(cors.New(cors.Config{
-        AllowOrigins: "*",
-        AllowHeaders: "Origin, Content-Type, Accept, Authorization",
-    }))
+    // app.Use(cors.New(cors.Config{
+    //     AllowOrigins: "*",
+    //     AllowHeaders: "Origin, Content-Type, Accept, Authorization",
+    // }))
 
     app.Use(logger.New())
 
@@ -35,6 +37,10 @@ func main() {
     app.Post("/todos", handlers.CreateTodo)
     app.Put("/todos/:id", handlers.UpdateTodo)
     app.Delete("/todos/:id", handlers.DeleteTodo)
+
+    if os.Getenv("ENV") == "production" {
+        app.Static("/", "./client/.next")
+    }
 
     log.Fatal(app.Listen(":8080"))
 }
