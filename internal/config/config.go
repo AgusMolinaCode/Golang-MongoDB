@@ -21,7 +21,12 @@ func InitMongo() {
         log.Fatal("Error loading .env file")
     }
 
-    clientOptions := options.Client().ApplyURI(os.Getenv("MONGO_DB"))
+    mongoURI := os.Getenv("MONGO_DB")
+    if mongoURI == "" {
+        log.Fatal("MONGO_DB environment variable not set")
+    }
+
+    clientOptions := options.Client().ApplyURI(mongoURI)
     client, err := mongo.Connect(context.TODO(), clientOptions)
     if err != nil {
         log.Fatal(err)
