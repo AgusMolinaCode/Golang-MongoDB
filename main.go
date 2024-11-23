@@ -1,14 +1,14 @@
 package main
 
 import (
-	"log"
+    "log"
 
-	"github.com/AgusMolinaCode/Golang-MongoDB/internal/config"
-	"github.com/AgusMolinaCode/Golang-MongoDB/internal/handlers"
-	"github.com/gofiber/fiber/v2"
-	// "github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
-	jwtware "github.com/gofiber/jwt/v3"
+    "github.com/AgusMolinaCode/Golang-MongoDB/internal/config"
+    "github.com/AgusMolinaCode/Golang-MongoDB/internal/handlers"
+    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v2/middleware/cors"
+    "github.com/gofiber/fiber/v2/middleware/logger"
+    jwtware "github.com/gofiber/jwt/v3"
 )
 
 func main() {
@@ -16,10 +16,10 @@ func main() {
 
     app := fiber.New()
 
-    // app.Use(cors.New(cors.Config{
-    //     AllowOrigins: "*",
-    //     AllowHeaders: "Origin, Content-Type, Accept, Authorization",
-    // }))
+    app.Use(cors.New(cors.Config{
+        AllowOrigins: "http://localhost:3000, https://next-js-todo-list-frontend.vercel.app",
+        AllowHeaders: "Origin, Content-Type, Accept, Authorization",
+    }))
 
     app.Use(logger.New())
 
@@ -28,7 +28,7 @@ func main() {
 
     app.Use("/todos", jwtware.New(jwtware.Config{
         SigningKey: []byte("secret"),
-    }))
+	}))
 
     app.Get("/todos", handlers.GetTodos)
     app.Get("/todos/:id", handlers.GetTodo)
