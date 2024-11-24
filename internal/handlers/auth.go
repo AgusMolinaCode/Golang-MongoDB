@@ -1,15 +1,15 @@
 package handlers
 
 import (
-	"context"
-	"time"
+    "context"
+    "time"
 
-	"github.com/AgusMolinaCode/Golang-MongoDB/internal/config"
-	"github.com/AgusMolinaCode/Golang-MongoDB/internal/models"
-	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
-	"go.mongodb.org/mongo-driver/bson"
-	"golang.org/x/crypto/bcrypt"
+    "github.com/AgusMolinaCode/Golang-MongoDB/internal/config"
+    "github.com/AgusMolinaCode/Golang-MongoDB/internal/models"
+    "github.com/gofiber/fiber/v2"
+    "github.com/golang-jwt/jwt/v4"
+    "go.mongodb.org/mongo-driver/bson"
+    "golang.org/x/crypto/bcrypt"
 )
 
 func Register(c *fiber.Ctx) error {
@@ -19,6 +19,13 @@ func Register(c *fiber.Ctx) error {
     var user models.User
     if err := c.BodyParser(&user); err != nil {
         return c.Status(400).JSON(fiber.Map{"error": err.Error()})
+    }
+
+    // Verificar si el nombre de usuario ya existe
+    var existingUser models.User
+    err := config.UserCollection.FindOne(ctx, bson.M{"username": user.Username}).Decode(&existingUser)
+    if err == nil {
+        return c.Status(400).JSON(fiber.Map{"error": "Username already exists"})
     }
 
     hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
