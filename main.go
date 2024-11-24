@@ -17,7 +17,7 @@ func main() {
     app := fiber.New()
 
     app.Use(cors.New(cors.Config{
-        AllowOrigins: "*",
+        AllowOrigins: "http://localhost:3000, https://next-js-todo-list-frontend.vercel.app",
         AllowHeaders: "Origin, Content-Type, Accept, Authorization",
     }))
 
@@ -28,7 +28,7 @@ func main() {
 
     app.Use("/todos", jwtware.New(jwtware.Config{
         SigningKey: []byte("secret"),
-	}))
+    }))
 
     app.Get("/todos", handlers.GetTodos)
     app.Get("/todos/:id", handlers.GetTodo)
@@ -36,5 +36,5 @@ func main() {
     app.Put("/todos/:id", handlers.UpdateTodo)
     app.Delete("/todos/:id", handlers.DeleteTodo)
 
-    log.Fatal(app.Listen(":8080"))
+    log.Fatal(app.Listen(":3000"))
 }
