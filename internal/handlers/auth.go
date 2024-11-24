@@ -18,21 +18,21 @@ func Register(c *fiber.Ctx) error {
 
     var user models.User
     if err := c.BodyParser(&user); err != nil {
-        return c.Status(400).SendString(err.Error())
+        return c.Status(400).JSON(fiber.Map{"error": err.Error()})
     }
 
     hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
     if err != nil {
-        return c.Status(500).SendString(err.Error())
+        return c.Status(500).JSON(fiber.Map{"error": err.Error()})
     }
     user.Password = string(hashedPassword)
 
     _, err = config.UserCollection.InsertOne(ctx, user)
     if err != nil {
-        return c.Status(500).SendString(err.Error())
+        return c.Status(500).JSON(fiber.Map{"error": err.Error()})
     }
 
-    return c.SendStatus(201)
+    return c.Status(201).JSON(fiber.Map{"success": true, "message": "User registered successfully"})
 }
 
 func Login(c *fiber.Ctx) error {
@@ -41,17 +41,17 @@ func Login(c *fiber.Ctx) error {
 
     var input models.User
     if err := c.BodyParser(&input); err != nil {
-        return c.Status(400).SendString(err.Error())
+        return c.Status(400).JSON(fiber.Map{"error": err.Error()})
     }
 
     var user models.User
     err := config.UserCollection.FindOne(ctx, bson.M{"username": input.Username}).Decode(&user)
     if err != nil {
-        return c.Status(401).SendString("Invalid username or password")
+        return c.Status(401).JSON(fiber.Map{"error": "Invalid username or password"})
     }
 
     if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
-        return c.Status(401).SendString("Invalid username or password")
+        return c.Status(401).JSON(fiber.Map{"error": "Invalid username or password"})
     }
 
     token := jwt.New(jwt.SigningMethodHS256)
@@ -62,7 +62,7 @@ func Login(c *fiber.Ctx) error {
 
     t, err := token.SignedString([]byte("secret"))
     if err != nil {
-        return c.Status(500).SendString(err.Error())
+        return c.Status(500).JSON(fiber.Map{"error": err.Error()})
     }
 
     return c.JSON(fiber.Map{"token": t})
