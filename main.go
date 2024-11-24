@@ -36,5 +36,5 @@ func main() {
 	app.Put("/todos/:id", handlers.UpdateTodo)
 	app.Delete("/todos/:id", handlers.DeleteTodo)
 
-	log.Fatal(app.Listen(":3000"))
+	log.Fatal(app.Listen(":8080"))
 }
