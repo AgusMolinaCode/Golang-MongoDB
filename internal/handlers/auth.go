@@ -54,7 +54,7 @@ func Login(c *fiber.Ctx) error {
     var user models.User
     err := config.UserCollection.FindOne(ctx, bson.M{"username": input.Username}).Decode(&user)
     if err != nil {
-        return c.Status(401).JSON(fiber.Map{"error": "Invalid username or password."})
+        return c.Status(401).JSON(fiber.Map{"error": "Invalid username or password"})
     }
 
     if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
